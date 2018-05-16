@@ -35,6 +35,17 @@ export abstract class Router extends EventEmitter {
         }
     }
 
-
+    renderForCallback(document, response: restify.Response, next: restify.Next){
+        return (document) => {
+            if(document){
+                this.emit('beforeRender', document);
+                response.json(document)
+            }else{
+                console.log(document);
+                throw new NotFoundError('Documento não encontrado')
+            }
+            return next()
+        }
+    }
 
 }

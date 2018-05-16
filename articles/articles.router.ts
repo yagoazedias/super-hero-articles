@@ -2,6 +2,7 @@ import {ModelRouter} from '../common/model-router'
 import * as restify from 'restify'
 import { NotFoundError } from 'restify-errors'
 import {Article} from './articles.model'
+const {ObjectId} = require('mongodb');
 
 class ArticlesRouter extends ModelRouter<Article> {
     constructor(){
@@ -20,6 +21,43 @@ class ArticlesRouter extends ModelRouter<Article> {
             .catch(next)
     };
 
+    findByUser = (req, resp, next) => {
+
+        if(req.query.user) {
+            Article.
+            find({})
+                .populate('user')
+                .then((articles) => {
+
+                    const articlesByUser = articles.filter((article) =>
+                        article.user._id.toString() === req.query.user
+                    );
+
+                    resp.json(articlesByUser);
+
+                }).catch(next)
+        } else {
+            next();
+        }
+    };
+
+    findByCategory = (req, resp, next) => {
+
+        if(req.query.category) {
+            Article.
+            find({})
+                .then((articles) => {
+                    const articlesFiltered = articles.filter((article) =>
+                        article.category.toString().includes(req.query.category)
+                    );
+
+                    resp.json(articlesFiltered);
+                }).catch(next)
+        } else {
+            next();
+        }
+    };
+
     findAll = (req, resp, next) => {
         this.model.find()
             .populate('category')
@@ -29,7 +67,7 @@ class ArticlesRouter extends ModelRouter<Article> {
     };
 
     applyRoutes(application: restify.Server){
-        application.get('/articles', this.findAll);
+        application.get('/articles', [this.findByUser, this.findByCategory, this.findAll]);
         application.get('/articles/:id', [this.validateId, this.findById]);
         application.post('/articles', this.save);
         application.put('/articles/:id', [this.validateId,this.replace]);
