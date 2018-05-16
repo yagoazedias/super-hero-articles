@@ -5,7 +5,7 @@ export interface Article extends mongoose.Document {
     description: string,
 }
 
-const articleSchema = new mongoose.Schema({
+export const articleSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true
@@ -17,4 +17,4 @@ const articleSchema = new mongoose.Schema({
 });
 
 
-export const Article = mongoose.model<Article>('Article', articleSchema);
+export const Article = mongoose.model<Article>('article', articleSchema);

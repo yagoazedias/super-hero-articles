@@ -4,15 +4,23 @@ import { NotFoundError } from 'restify-errors'
 import { Category } from './category.model'
 
 class CategoryRouter extends ModelRouter<Category> {
-  constructor(){
-    super(Category)
-  }
+    constructor(){
+        super(Category)
+    }
 
-  applyRoutes(application: restify.Server){
-    application.get('/category', this.findAll);
-    application.get('/category/:id', [this.validateId, this.findById]);
-    application.post('/category', this.save);
-  }
+    findById = (req, resp, next) => {
+        this.model.findById(req.params.id)
+            .populate('users')
+            .populate('articles')
+            .then(this.render(resp, next))
+            .catch(next)
+    };
+
+    applyRoutes(application: restify.Server){
+        application.get('/categories', this.findAll);
+        application.get('/categories/:id', [this.validateId, this.findById]);
+        application.post('/categories', this.save);
+    }
 
 }
 

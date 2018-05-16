@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose'
-import {validateCPF} from '../common/validators'
 import * as bcrypt from 'bcrypt'
 import {environment} from '../common/environment'
 
@@ -26,19 +25,6 @@ export const userSchema = new mongoose.Schema({
     type: String,
     select: false,
     required: true
-  },
-  gender: {
-    type: String,
-    required: false,
-    enum: ['Male', 'Female']
-  },
-  cpf: {
-    type: String,
-    required: false,
-    validate: {
-      validator: validateCPF,
-      message: '{PATH}: Invalid CPF ({VALUE})'
-    }
   }
 });
 
@@ -71,4 +57,4 @@ userSchema.pre('save', saveMiddleware);
 userSchema.pre('findOneAndUpdate', updateMiddleware);
 userSchema.pre('update', updateMiddleware);
 
-export const User = mongoose.model<User>('User', userSchema);
+export const User = mongoose.model<User>('user', userSchema);

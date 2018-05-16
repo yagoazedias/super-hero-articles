@@ -1,23 +1,24 @@
 import * as mongoose from 'mongoose';
-import { User } from "../users/users.model";
-import { Article } from "../articles/articles.model";
+import { User, userSchema } from "../users/users.model";
+import { Article, articleSchema } from "../articles/articles.model";
+import { articlesRouter } from "../articles/articles.router";
 
 export interface Category extends mongoose.Document {
     date: Date,
     name: string,
-    users: Array<mongoose.Types.ObjectId> | Array<User>,
-    articles: Array<mongoose.Types.ObjectId> | Array<Article>,
+    users: Array<mongoose.Schema.Types.ObjectId> | Array<User>,
+    articles: Array<mongoose.Schema.Types.ObjectId> | Array<Article>,
 }
 
 const CategorySchema = new mongoose.Schema({
     users: {
-        type: Array,
-        ref: 'User',
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+        ref: 'users',
         required: true
     },
     articles: {
-        type: Array,
-        ref: 'Article',
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "article" }],
+        ref: 'articles',
         required: true
     },
     name: {
@@ -27,4 +28,4 @@ const CategorySchema = new mongoose.Schema({
 });
 
 
-export const Category = mongoose.model<Category>('Category', CategorySchema);
+export const Category = mongoose.model<Category>('category', CategorySchema);
