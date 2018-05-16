@@ -1,7 +1,6 @@
 import * as mongoose from 'mongoose';
-import { User, userSchema } from "../users/users.model";
-import { Article, articleSchema } from "../articles/articles.model";
-import { articlesRouter } from "../articles/articles.router";
+import { User } from "../users/users.model";
+import { Article } from "../articles/articles.model";
 
 export interface Category extends mongoose.Document {
     date: Date,
@@ -11,20 +10,26 @@ export interface Category extends mongoose.Document {
 }
 
 const CategorySchema = new mongoose.Schema({
+    name: {
+        unique: true,
+        type: String,
+        required: true
+    },
     users: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
         ref: 'users',
-        required: true
+        required: false
     },
     articles: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: "article" }],
         ref: 'articles',
         required: true
     },
-    name: {
-        type: String,
-        required: true
-    },
+    views: {
+        type: Number,
+        required: true,
+        default: 0
+    }
 });
 
 
