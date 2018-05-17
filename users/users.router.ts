@@ -34,6 +34,7 @@ class UsersRouter extends ModelRouter<User> {
 
         if(req.query.lastmonth) {
             User.find({})
+                .populate('articles')
                 .then(users => {
                     const usersFiltered = users.filter((user) => {
                         if(!user.lastPost)
