@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon dist/main.js"
+    "start": "nodemon dist/main.js",
+    "tsc": "./node_modules/typescript/bin/tsc -w"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
     "@types/bcrypt": "1.0.0",
     "@types/mongoose": "4.7.32",
     "@types/restify": "5.0.6",
-    "@types/restify-errors": "4.3.2"
+    "@types/restify-errors": "4.3.2",
+    "typescript": "^2.8.3"
   }
 }
