@@ -80,10 +80,10 @@ class CategoryRouter extends ModelRouter<Category> {
     };
 
     applyRoutes(application: restify.Server){
-        application.get('/categories', this.findAll);
-        application.get('/categories/rockstars', this.findByAllStars);
-        application.get('/categories/:id', [this.validateId, this.findById]);
-        application.post('/categories', this.save);
+        application.get(`${this.basePath}`, this.findAll);
+        application.get(`${this.basePath}/rockstars`, this.findByAllStars);
+        application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
+        application.post(`${this.basePath}`, this.save);
     }
 
 }
