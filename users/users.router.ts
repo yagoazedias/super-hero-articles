@@ -2,7 +2,7 @@ import { ModelRouter } from '../common/model-router';
 import * as restify from 'restify';
 import { User } from './users.model';
 import { Category } from "../category/category.model";
-import {isLastMonth, monthDiff} from "../helpers/helpers";
+import { isLastMonth } from "../helpers/helpers";
 
 
 class UsersRouter extends ModelRouter<User> {
