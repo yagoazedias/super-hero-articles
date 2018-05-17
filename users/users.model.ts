@@ -7,6 +7,7 @@ import { Category } from "../category/category.model";
 export interface User extends mongoose.Document {
     name: string,
     email: string,
+    lastPost: Date,
     password: string,
     articles: Array<mongoose.Schema.Types.ObjectId> | Array<Article>,
     categories: Array<mongoose.Schema.Types.ObjectId> | Array<Category>,
@@ -18,6 +19,10 @@ export const userSchema = new mongoose.Schema({
         required: true,
         maxlength: 80,
         minlength: 3
+    },
+    lastPost: {
+        type: Date,
+        default: null
     },
     email: {
         type: String,
