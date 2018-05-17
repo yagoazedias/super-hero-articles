@@ -2,7 +2,7 @@ import { ModelRouter } from '../common/model-router'
 import * as restify from 'restify'
 import { User } from './users.model'
 import { Category } from "../category/category.model";
-import { numDaysBetween } from "../helpers/helpers";
+import { monthDiff } from "../helpers/helpers";
 
 
 class UsersRouter extends ModelRouter<User> {
@@ -39,7 +39,7 @@ class UsersRouter extends ModelRouter<User> {
                     const usersFiltered = users.filter((user) => {
                         if(!user.lastPost)
                             return true;
-                        else if (numDaysBetween(new Date(user.lastPost), new Date()) > 30) {
+                        else if (monthDiff(new Date(user.lastPost), new Date()) === 1) {
                             return true;
                         } else {
                             return false;

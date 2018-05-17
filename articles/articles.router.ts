@@ -4,7 +4,7 @@ import { Article } from './articles.model'
 import { Category } from "../category/category.model";
 import { User } from "../users/users.model";
 import {Error} from "mongoose";
-import {NotFoundError} from "restify-errors";
+import {BadRequestError, NotFoundError} from "restify-errors";
 
 class ArticlesRouter extends ModelRouter<Article> {
     constructor(){
@@ -21,11 +21,23 @@ class ArticlesRouter extends ModelRouter<Article> {
         document.category.users = undefined;
     };
 
+
     findById = (req, resp, next) => {
-        this.model.findById(req.params.id)
+        this.model
+            .findOneAndUpdate({'_id': req.params.id}, {$inc: { views: 1} })
             .populate('category')
             .populate('user')
-            .then(this.render(resp, next))
+            .then(article => {
+
+                Category
+                    .findOneAndUpdate({'_id': article.category.id}, {$inc: { views: 1} })
+                    .then(category => {
+                        console.log(category);
+                    });
+
+                this.preFormatter(article);
+                resp.send(article);
+            })
             .catch(next)
     };
 
@@ -38,8 +50,7 @@ class ArticlesRouter extends ModelRouter<Article> {
                 .then((articles) => {
 
                     const articlesByUser = articles.filter((article) =>
-                        article.user._id.toString() === req.query.user
-                    );
+                        article.user._id.toString() === req.query.user);
 
                     resp.json(articlesByUser);
 
@@ -91,7 +102,6 @@ class ArticlesRouter extends ModelRouter<Article> {
                                     User
                                         .findOneAndUpdate({'_id': req.body.user}, {$push: { articles: article._id} })
                                         .catch(next);
-
                                     User
                                         .findOneAndUpdate({'_id': req.body.user}, {$set: { lastPost : new Date(req.body.date) } })
                                         .catch(next);
@@ -111,7 +121,7 @@ class ArticlesRouter extends ModelRouter<Article> {
                         })
                         .catch(next)
                 } else {
-                    throw new NotFoundError('User category and article category does not match')
+                    throw new BadRequestError('User category and article category does not match')
                 }
             }).catch(next);
     };

@@ -23,6 +23,20 @@ class CategoryRouter extends ModelRouter<Category> {
         });
     };
 
+    findByAllStars = (req, resp, next) => {
+        this.model.find()
+            .populate({
+                path:     'users',
+                populate: { path:  'user',
+                    model: User }
+            })
+            .populate('articles')
+            .then(categories => {
+                console.log(categories);
+            })
+            .catch(next)
+    };
+
     findById = (req, resp, next) => {
         this.model.findById(req.params.id)
             .populate({
@@ -53,6 +67,7 @@ class CategoryRouter extends ModelRouter<Category> {
 
     applyRoutes(application: restify.Server){
         application.get('/categories', this.findAll);
+        application.get('/categories/rockstars', this.findByAllStars);
         application.get('/categories/:id', [this.validateId, this.findById]);
         application.post('/categories', this.save);
     }
