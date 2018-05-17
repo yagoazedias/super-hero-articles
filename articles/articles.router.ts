@@ -5,6 +5,7 @@ import { Category } from "../category/category.model";
 import { User } from "../users/users.model";
 import {Error} from "mongoose";
 import {BadRequestError, NotFoundError} from "restify-errors";
+import {throws} from "assert";
 
 class ArticlesRouter extends ModelRouter<Article> {
     constructor(){
@@ -29,14 +30,18 @@ class ArticlesRouter extends ModelRouter<Article> {
             .populate('user')
             .then(article => {
 
-                Category
-                    .findOneAndUpdate({'_id': article.category.id}, {$inc: { views: 1} })
-                    .then(category => {
-                        console.log(category);
-                    });
+                try {
+                    Category
+                        .findOneAndUpdate({'_id': article.category.id}, {$inc: { views: 1} })
+                        .then(category => {
+                            console.log(category);
+                        });
 
-                this.preFormatter(article);
-                resp.send(article);
+                    this.preFormatter(article);
+                    resp.send(article);
+                } catch (e) {
+                    throw new BadRequestError(`No article found for: ${req.params.id} ID`)
+                }
             })
             .catch(next)
     };
