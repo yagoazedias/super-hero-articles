@@ -28,3 +28,24 @@ git clone https://github.com/yagoazedias/super-hero-articles && cd super-hero-ar
 ```
   npm start
 ```
+
+## Rules
+- The API only allow the following actions:
+    - Register users, categories and articles and retrieve them by their ObjectID;
+    - List all articles by category or provider;
+    - List users who did not post content in the last month
+    - List the 3 categories with the most article views
+
+### Articles:
+ - Articles are always related to one category and to one user. If a user try to create a article that does not match with its category, the server will return status `400`;
+
+ 
+### Users
+ - All users have a category as required property.
+ - An user is able to write multiples articles, 
+   as long as them match with their category.
+   
+### Category
+ - Category is a required property for both of `user` and `article` documents. So it must to be the first document to be created.
+ 
+ 

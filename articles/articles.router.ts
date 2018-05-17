@@ -1,11 +1,12 @@
-import { ModelRouter } from '../common/model-router'
-import * as restify from 'restify'
-import { Article } from './articles.model'
+import { ModelRouter } from '../common/model-router';
+import * as restify from 'restify';
+import { Article } from './articles.model';
 import { Category } from "../category/category.model";
 import { User } from "../users/users.model";
 import { BadRequestError, NotFoundError} from "restify-errors";
 
 class ArticlesRouter extends ModelRouter<Article> {
+
     constructor() {
         super(Article);
         this.on('beforeRender', document => {
@@ -29,14 +30,11 @@ class ArticlesRouter extends ModelRouter<Article> {
             .then(article => {
 
                 try {
-                    Category
-                        .findOneAndUpdate({'_id': article.category.id}, {$inc: { views: 1} })
-                        .then(category => {
-                            console.log(category);
-                        });
+                    Category.findOneAndUpdate({'_id': article.category.id}, {$inc: { views: 1} });
 
                     this.preFormatter(article);
                     resp.send(article);
+
                 } catch (e) {
                     throw new NotFoundError(`No article found for: ${req.params.id} ID`)
                 }
