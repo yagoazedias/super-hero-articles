@@ -3,6 +3,8 @@ import * as restify from 'restify'
 import { Article } from './articles.model'
 import { Category } from "../category/category.model";
 import { User } from "../users/users.model";
+import {Error} from "mongoose";
+import {NotFoundError} from "restify-errors";
 
 class ArticlesRouter extends ModelRouter<Article> {
     constructor(){
@@ -74,32 +76,40 @@ class ArticlesRouter extends ModelRouter<Article> {
 
     save = (req, resp, next) => {
         const document = new this.model(req.body);
-        console.log(document);
-        document
-            .save()
-            .then((article) => {
 
-                User
-                    .findOne({'_id': req.body.user})
-                    .then(() => {
-                        User
-                            .findOneAndUpdate({'_id': req.body.user}, {$push: { articles: article._id} })
-                            .catch(next);
+        User
+            .findOne({'_id': req.body.user})
+            .then((user) => {
+                if(user.category.toString() === req.body.category) {
+                    document
+                        .save()
+                        .then((article) => {
 
-                    }).catch(next);
+                            User
+                                .findOne({'_id': req.body.user})
+                                .then((user) => {
+                                    User
+                                        .findOneAndUpdate({'_id': req.body.user}, {$push: { articles: article._id} })
+                                        .catch(next);
 
-                Category
-                    .findOne({'_id': req.body.category})
-                    .then(() => {
-                        Category
-                            .findOneAndUpdate({'_id': req.body.category}, {$push: { articles: article._id} })
-                            .catch(next);
+                                }).catch(next);
 
-                    }).catch(next);
+                            Category
+                                .findOne({'_id': req.body.category})
+                                .then(() => {
+                                    Category
+                                        .findOneAndUpdate({'_id': req.body.category}, {$push: { articles: article._id} })
+                                        .catch(next);
 
-                resp.send(document);
-            })
-            .catch(next)
+                                }).catch(next);
+
+                            resp.send(document);
+                        })
+                        .catch(next)
+                } else {
+                    throw new NotFoundError('User category and article category does not match')
+                }
+            }).catch(next);
     };
 
     applyRoutes(application: restify.Server){
