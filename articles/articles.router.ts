@@ -6,7 +6,7 @@ import { User } from "../users/users.model";
 import { BadRequestError, NotFoundError} from "restify-errors";
 
 class ArticlesRouter extends ModelRouter<Article> {
-    constructor(){
+    constructor() {
         super(Article);
         this.on('beforeRender', document => {
             this.preFormatter(document);
@@ -81,10 +81,29 @@ class ArticlesRouter extends ModelRouter<Article> {
     };
 
     findAll = (req, resp, next) => {
-        this.model.find()
-            .populate('category')
-            .populate('user')
-            .then(this.renderAll(resp,next))
+
+        let page = parseInt(req.query._page || 1);
+        page = page > 0 ? page : 1;
+
+        if(req.query._count)
+            this.pageSize = parseInt(req.query._count, 10);
+
+        const skip = (page - 1) * this.pageSize;
+
+        this.model
+            .count({})
+            .exec()
+            .then((count) =>
+                this.model
+                    .find()
+                    .populate('user')
+                    .skip(skip)
+                    .limit(this.pageSize)
+                    .populate('category')
+                    .then(this.renderAll(resp, next,
+                        {
+                            page, count, pageSize: this.pageSize, url: req.url
+                        })))
             .catch(next)
     };
 

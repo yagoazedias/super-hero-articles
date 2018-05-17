@@ -110,8 +110,7 @@ class UsersRouter extends ModelRouter<User> {
     };
 
     applyRoutes(application: restify.Server) {
-        application.get({path: `${this.basePath}`, version: '1.0.0'}, [this.findByLastPost, this.findAllXml]);
-        application.get({path: `${this.basePath}`, version: '2.0.0'}, [this.findByLastPost, this.findAll]);
+        application.get({path: `${this.basePath}`, version: '1.0.0'}, [this.findByLastPost, this.findAll]);
         application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
         application.post(`${this.basePath}`, this.save);
         application.put(`${this.basePath}/:id`, [this.validateId,this.replace]);
