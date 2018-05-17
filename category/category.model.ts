@@ -9,7 +9,7 @@ export interface Category extends mongoose.Document {
     articles: Array<mongoose.Schema.Types.ObjectId> | Array<Article>,
 }
 
-const CategorySchema = new mongoose.Schema({
+export const CategorySchema = new mongoose.Schema({
     name: {
         unique: true,
         type: String,
@@ -17,13 +17,11 @@ const CategorySchema = new mongoose.Schema({
     },
     users: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
-        ref: 'users',
-        required: false
     },
     articles: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: "article" }],
         ref: 'articles',
-        required: true
+        default: []
     },
     views: {
         type: Number,

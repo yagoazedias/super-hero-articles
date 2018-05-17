@@ -2,6 +2,7 @@ import { ModelRouter } from '../common/model-router'
 import * as restify from 'restify'
 import { NotFoundError } from 'restify-errors'
 import { Category } from './category.model'
+import {User} from "../users/users.model";
 
 class CategoryRouter extends ModelRouter<Category> {
     constructor(){
@@ -10,15 +11,13 @@ class CategoryRouter extends ModelRouter<Category> {
 
     findById = (req, resp, next) => {
         this.model.findById(req.params.id)
-            .populate('users',)
-            .populate('articles')
+            .populate("user")
             .then(this.render(resp, next))
             .catch(next)
     };
 
     findAll = (req, resp, next) => {
         this.model.find()
-            .populate('users',)
             .populate('articles')
             .then(this.renderAll(resp,next))
             .catch(next)

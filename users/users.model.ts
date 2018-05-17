@@ -25,19 +25,14 @@ export const userSchema = new mongoose.Schema({
         match: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         required: true
     },
-    password: {
-        type: String,
-        select: false,
-        required: true
-    },
     articles: {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: "article" }],
         ref: 'articles',
         required: false
     },
-    categories: {
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "category" }],
-        ref: 'articles',
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'category',
         required: true
     },
 });
