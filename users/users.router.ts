@@ -7,11 +7,35 @@ import { Category } from "../category/category.model";
 class UsersRouter extends ModelRouter<User> {
 
     constructor(){
-        super(User)
-        // this.on('beforeRender', document=>{
-        //   document.password = undefined
-        // })
+        super(User);
+        this.on('beforeRender', document => {
+            this.preFormatter(document);
+        })
     }
+
+    preFormatter =  (document) => {
+        document.category.users = undefined;
+        document.category.articles = undefined;
+        document.articles.forEach((actual) => {
+            actual.category = undefined;
+        })
+    };
+
+    findById = (req, resp, next) => {
+        this.model.findById(req.params.id)
+            .populate('articles')
+            .populate('category')
+            .then(this.render(resp, next))
+            .catch(next)
+    };
+
+    findAll = (req, resp, next) => {
+        this.model.find()
+            .populate('articles')
+            .populate('category')
+            .then(this.renderAll(resp, next))
+            .catch(next)
+    };
 
     save = (req, resp, next) => {
 

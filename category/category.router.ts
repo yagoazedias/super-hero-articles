@@ -6,14 +6,33 @@ import {User} from "../users/users.model";
 
 class CategoryRouter extends ModelRouter<Category> {
     constructor(){
-        super(Category)
+        super(Category);
+        this.on('beforeRender', document => {
+            this.preFormatter(document);
+        })
     }
+
+    preFormatter =  (document) => {
+        document.articles.forEach((actual) => {
+            actual.category = undefined;
+        });
+
+        document.users.forEach((actual) => {
+            actual.category = undefined;
+            actual.articles = undefined;
+        });
+    };
 
     findById = (req, resp, next) => {
         this.model.findById(req.params.id)
             .populate({
                 path:     'users',
                 populate: { path:  'user',
+                    model: User }
+            })
+            .populate({
+                path:     'articles',
+                populate: { path:  'article',
                     model: User }
             })
             .then(this.render(resp, next))

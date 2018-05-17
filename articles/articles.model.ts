@@ -7,7 +7,8 @@ export interface Article extends mongoose.Document {
     description: string,
     user: User,
     category: Category,
-    views: Number
+    views: Number,
+    date: Date
 }
 
 export const articleSchema = new mongoose.Schema({
@@ -19,19 +20,25 @@ export const articleSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
-        required: false
+        required: true
     },
     description: {
         type: String,
         required: true
     },
     category: {
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "category" }],
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "category",
         required: true
     },
     views: {
         type: Number,
-        required: false
+        required: false,
+        default: 0
+    },
+    date: {
+        type: Date,
+        required: true
     }
 });
 
