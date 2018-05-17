@@ -1,9 +1,8 @@
-import { ModelRouter } from '../common/model-router'
-import * as restify from 'restify'
-import { User } from './users.model'
+import { ModelRouter } from '../common/model-router';
+import * as restify from 'restify';
+import { User } from './users.model';
 import { Category } from "../category/category.model";
 import { monthDiff } from "../helpers/helpers";
-import * as js2xmlparser from "js2xmlparser";
 
 
 class UsersRouter extends ModelRouter<User> {
@@ -91,8 +90,7 @@ class UsersRouter extends ModelRouter<User> {
             .catch(next)
     };
 
-    applyRoutes(application: restify.Server){
-
+    applyRoutes(application: restify.Server) {
         application.get({path: '/users', version: '1.0.0'}, [this.findByLastPost, this.findAllXml]);
         application.get({path: '/users', version: '2.0.0'}, [this.findByLastPost, this.findAll]);
         application.get('/users/:id', [this.validateId, this.findById]);

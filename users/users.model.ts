@@ -10,7 +10,7 @@ export interface User extends mongoose.Document {
     lastPost: Date,
     password: string,
     articles: Array<mongoose.Schema.Types.ObjectId> | Array<Article>,
-    categories: Array<mongoose.Schema.Types.ObjectId> | Array<Category>,
+    category: Array<mongoose.Schema.Types.ObjectId> | Array<Category>,
 }
 
 export const userSchema = new mongoose.Schema({

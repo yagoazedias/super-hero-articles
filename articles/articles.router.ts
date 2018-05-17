@@ -3,9 +3,7 @@ import * as restify from 'restify'
 import { Article } from './articles.model'
 import { Category } from "../category/category.model";
 import { User } from "../users/users.model";
-import {Error} from "mongoose";
-import {BadRequestError, NotFoundError} from "restify-errors";
-import {throws} from "assert";
+import { BadRequestError, NotFoundError} from "restify-errors";
 
 class ArticlesRouter extends ModelRouter<Article> {
     constructor(){
@@ -40,7 +38,7 @@ class ArticlesRouter extends ModelRouter<Article> {
                     this.preFormatter(article);
                     resp.send(article);
                 } catch (e) {
-                    throw new BadRequestError(`No article found for: ${req.params.id} ID`)
+                    throw new NotFoundError(`No article found for: ${req.params.id} ID`)
                 }
             })
             .catch(next)
@@ -126,7 +124,7 @@ class ArticlesRouter extends ModelRouter<Article> {
                         })
                         .catch(next)
                 } else {
-                    throw new BadRequestError('User category and article category does not match')
+                    throw new BadRequestError('User category and article category does not match');
                 }
             }).catch(next);
     };
