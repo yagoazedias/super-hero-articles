@@ -12,6 +12,16 @@ class CategoryRouter extends ModelRouter<Category> {
         })
     }
 
+    private sortCategoriesByView(arr) {
+        return arr.sort((a, b) =>
+            (a.views < b.views) ? 1 : ((b.views < a.views) ? -1 : 0));
+    }
+
+    private getFirstTree(arr) {
+        return arr.slice(0, 3)
+    }
+
+
     preFormatter =  (document) => {
         document.articles.forEach((actual) => {
             actual.category = undefined;
@@ -32,7 +42,11 @@ class CategoryRouter extends ModelRouter<Category> {
             })
             .populate('articles')
             .then(categories => {
-                console.log(categories);
+
+                const categoriesOrdered = this.sortCategoriesByView(categories);
+                const firstCategories = this.getFirstTree(categoriesOrdered);
+
+                resp.send(firstCategories);
             })
             .catch(next)
     };
