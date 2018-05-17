@@ -2,7 +2,7 @@ import { ModelRouter } from '../common/model-router';
 import * as restify from 'restify';
 import { User } from './users.model';
 import { Category } from "../category/category.model";
-import { monthDiff } from "../helpers/helpers";
+import {isLastMonth, monthDiff} from "../helpers/helpers";
 
 
 class UsersRouter extends ModelRouter<User> {
@@ -31,26 +31,22 @@ class UsersRouter extends ModelRouter<User> {
     };
 
     findByLastPost = (req, resp, next) => {
-
-        if(req.query.lastmonth) {
             User.find({})
                 .populate('articles')
                 .then(users => {
                     const usersFiltered = users.filter((user) => {
                         if(!user.lastPost)
                             return true;
-                        else if (monthDiff(new Date(user.lastPost), new Date()) === 1) {
-                            return true;
-                        } else {
+                        else if (isLastMonth(new Date(), new Date(user.lastPost))) {
                             return false;
+                        } else {
+                            return true;
                         }
                     });
 
                     resp.send(usersFiltered);
+                    next();
                 })
-        } else {
-            next();
-        }
     };
 
     findAll = (req, resp, next) => {
@@ -110,13 +106,10 @@ class UsersRouter extends ModelRouter<User> {
     };
 
     applyRoutes(application: restify.Server) {
-        application.get({path: `${this.basePath}`, version: '1.0.0'}, [this.findByLastPost, this.findAll]);
+        application.get(`${this.basePath}`, this.findAll);
+        application.get(`${this.basePath}/updated`, this.findByLastPost);
         application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
         application.post(`${this.basePath}`, this.save);
-        application.put(`${this.basePath}/:id`, [this.validateId,this.replace]);
-        application.patch(`${this.basePath}/:id`, [this.validateId,this.update]);
-        application.del(`${this.basePath}/:id`, [this.validateId,this.delete]);
-
     }
 }
 
