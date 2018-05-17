@@ -6,8 +6,18 @@ import { User } from "../users/users.model";
 
 class ArticlesRouter extends ModelRouter<Article> {
     constructor(){
-        super(Article)
+        super(Article);
+        this.on('beforeRender', document => {
+            this.preFormatter(document);
+        })
     }
+
+    preFormatter =  (document) => {
+        document.user.category = undefined;
+        document.user.articles = undefined;
+        document.category.articles = undefined;
+        document.category.users = undefined;
+    };
 
     findById = (req, resp, next) => {
         this.model.findById(req.params.id)
@@ -86,6 +96,8 @@ class ArticlesRouter extends ModelRouter<Article> {
                             .catch(next);
 
                     }).catch(next);
+
+                resp.send(document);
             })
             .catch(next)
     };
