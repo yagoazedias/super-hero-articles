@@ -93,7 +93,7 @@ class ArticlesRouter extends ModelRouter<Article> {
                                         .catch(next);
 
                                     User
-                                        .findOneAndUpdate({'_id': req.body.user}, {$set: { lastPost : Date.now() } })
+                                        .findOneAndUpdate({'_id': req.body.user}, {$set: { lastPost : new Date(req.body.date) } })
                                         .catch(next);
 
                                 }).catch(next);

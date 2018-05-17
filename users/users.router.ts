@@ -2,6 +2,7 @@ import { ModelRouter } from '../common/model-router'
 import * as restify from 'restify'
 import { User } from './users.model'
 import { Category } from "../category/category.model";
+import { numDaysBetween } from "../helpers/helpers";
 
 
 class UsersRouter extends ModelRouter<User> {
@@ -27,6 +28,28 @@ class UsersRouter extends ModelRouter<User> {
             .populate('category')
             .then(this.render(resp, next))
             .catch(next)
+    };
+
+    findByLastPost = (req, resp, next) => {
+
+        if(req.query.lastmonth) {
+            User.find({})
+                .then(users => {
+                    const usersFiltered = users.filter((user) => {
+                        if(!user.lastPost)
+                            return true;
+                        else if (numDaysBetween(new Date(user.lastPost), new Date()) > 30) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    });
+
+                    resp.send(usersFiltered);
+                })
+        } else {
+            next();
+        }
     };
 
     findAll = (req, resp, next) => {
@@ -60,7 +83,7 @@ class UsersRouter extends ModelRouter<User> {
 
     applyRoutes(application: restify.Server){
 
-        application.get('/users', this.findAll);
+        application.get('/users', [this.findByLastPost, this.findAll]);
         application.get('/users/:id', [this.validateId, this.findById]);
         application.post('/users', this.save);
         application.put('/users/:id', [this.validateId,this.replace]);
