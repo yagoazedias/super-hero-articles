@@ -54,10 +54,29 @@ class UsersRouter extends ModelRouter<User> {
     };
 
     findAll = (req, resp, next) => {
-        this.model.find()
-            .populate('articles')
-            .populate('category')
-            .then(this.renderAll(resp, next))
+
+        let page = parseInt(req.query._page || 1);
+        page = page > 0 ? page : 1;
+
+        if(req.query._count)
+            this.pageSize = parseInt(req.query._count, 10);
+
+        const skip = (page - 1) * this.pageSize;
+
+        this.model
+            .count({})
+            .exec()
+            .then((count) =>
+                this.model
+                    .find()
+                    .populate('articles')
+                    .skip(skip)
+                    .limit(this.pageSize)
+                    .populate('category')
+                    .then(this.renderAll(resp, next,
+                        {
+                            page, count, pageSize: this.pageSize, url: req.url
+                        })))
             .catch(next)
     };
 
