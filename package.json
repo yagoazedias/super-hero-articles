@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "1.0.3",
+    "js2xmlparser": "^3.0.0",
     "mongoose": "4.13.9",
     "mongoose-deep-populate": "^3.1.1",
     "restify": "6.3.4",

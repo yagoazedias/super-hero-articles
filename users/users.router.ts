@@ -3,6 +3,7 @@ import * as restify from 'restify'
 import { User } from './users.model'
 import { Category } from "../category/category.model";
 import { monthDiff } from "../helpers/helpers";
+import * as js2xmlparser from "js2xmlparser";
 
 
 class UsersRouter extends ModelRouter<User> {
@@ -61,6 +62,14 @@ class UsersRouter extends ModelRouter<User> {
             .catch(next)
     };
 
+    findAllXml = (req, resp, next) => {
+        this.model.find()
+            .populate('articles')
+            .populate('category')
+            .then(this.renderAllXml(resp, next))
+            .catch(next)
+    };
+
     save = (req, resp, next) => {
 
         const document = new this.model(req.body);
@@ -75,7 +84,7 @@ class UsersRouter extends ModelRouter<User> {
                             .findOneAndUpdate({'_id': req.body.category}, {$push: { users: user._id} })
                             .catch(next);
 
-                        resp.send(document);
+                        resp(document);
 
                     }).catch(next);
             })
@@ -84,7 +93,8 @@ class UsersRouter extends ModelRouter<User> {
 
     applyRoutes(application: restify.Server){
 
-        application.get('/users', [this.findByLastPost, this.findAll]);
+        application.get({path: '/users', version: '1.0.0'}, [this.findByLastPost, this.findAllXml]);
+        application.get({path: '/users', version: '2.0.0'}, [this.findByLastPost, this.findAll]);
         application.get('/users/:id', [this.validateId, this.findById]);
         application.post('/users', this.save);
         application.put('/users/:id', [this.validateId,this.replace]);
