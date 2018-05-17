@@ -11,13 +11,22 @@ class CategoryRouter extends ModelRouter<Category> {
 
     findById = (req, resp, next) => {
         this.model.findById(req.params.id)
-            .populate("user")
+            .populate({
+                path:     'users',
+                populate: { path:  'user',
+                    model: User }
+            })
             .then(this.render(resp, next))
             .catch(next)
     };
 
     findAll = (req, resp, next) => {
         this.model.find()
+            .populate({
+                path:     'users',
+                populate: { path:  'user',
+                    model: User }
+            })
             .populate('articles')
             .then(this.renderAll(resp,next))
             .catch(next)
