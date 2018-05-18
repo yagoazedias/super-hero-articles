@@ -76,14 +76,6 @@ class UsersRouter extends ModelRouter<User> {
             .catch(next)
     };
 
-    findAllXml = (req, resp, next) => {
-        this.model.find()
-            .populate('articles')
-            .populate('category')
-            .then(this.renderAllXml(resp, next))
-            .catch(next)
-    };
-
     save = (req, resp, next) => {
 
         const document = new this.model(req.body);
