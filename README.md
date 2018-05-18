@@ -62,7 +62,7 @@ git clone https://github.com/yagoazedias/super-hero-articles && cd super-hero-ar
         {
             "name": "K-el",
             "email": "superman@dc.com",
-            "password": "admin123@"
+            "category": {{categoryId}}
         }
         ```
  -  Get an user by its `id`:
@@ -101,22 +101,19 @@ git clone https://github.com/yagoazedias/super-hero-articles && cd super-hero-ar
     - GET `http://localhost:5000/articles?_page=1&_count=1`
     
     
- -  Create a new article  
+ -  Create a new category  
      - POST - `http://localhost:5000/articles`
         ```json
         {
-            "title": "Como ser o batman",
-            "description": "Diga repetidas vezes que você é o batman",
-            "user": {{userId}},
-            "category": {{userCategory}},
-            "date": "Thu May 17 2018 00:54:47 GMT-0300 (BRT)"
+        	"name": "Voadores",
+        	"views": 0
         }
         ```
- -  Get an article by its `id`:
-    - GET - `http://localhost:5000/article/:id`
+ -  Get a category by its `id`:
+    - GET - `http://localhost:5000/categories/:id`
  
- -  Get all articles by `user`:
-    - GET - `http://localhost:5000/articles?user={{userId}}`
+ -  Get all category by `user`:
+    - GET - `http://localhost:5000/categories?user={{userId}}`
 
- -  Get all articles by `category`:
-    - GET - `http://localhost:5000/articles?category={{categoryId}}`
+ -  Get the rockstars categories (the first three):
+    - GET - `http://localhost:5000/categories/rockstars`

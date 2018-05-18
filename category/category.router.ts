@@ -76,7 +76,7 @@ class CategoryRouter extends ModelRouter<Category> {
             this.pageSize = parseInt(req.query._count, 10);
 
         const skip = (page - 1) * this.pageSize;
-        
+
         this.model
             .count({})
             .exec()
