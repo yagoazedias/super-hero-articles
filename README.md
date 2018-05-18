@@ -70,3 +70,53 @@ git clone https://github.com/yagoazedias/super-hero-articles && cd super-hero-ar
  
  -  Get all users that have not posted in the last month:
     - GET - `http://localhost:5000/users/irregular`
+    
+### Articles
+ -  Get All articles with pagination
+    - GET `http://localhost:5000/articles?_page=1&_count=1`
+    
+    
+ -  Create a new article  
+     - POST - `http://localhost:5000/articles`
+        ```json
+        {
+            "title": "Como ser o batman",
+            "description": "Diga repetidas vezes que você é o batman",
+            "user": {{userId}},
+            "category": {{userCategory}},
+            "date": "Thu May 17 2018 00:54:47 GMT-0300 (BRT)"
+        }
+        ```
+ -  Get an article by its `id`:
+    - GET - `http://localhost:5000/article/:id`
+ 
+ -  Get all articles by `user`:
+    - GET - `http://localhost:5000/articles?user={{userId}}`
+
+ -  Get all articles by `category`:
+    - GET - `http://localhost:5000/articles?category={{categoryId}}`
+
+### Category
+ -  Get All category with pagination
+    - GET `http://localhost:5000/articles?_page=1&_count=1`
+    
+    
+ -  Create a new article  
+     - POST - `http://localhost:5000/articles`
+        ```json
+        {
+            "title": "Como ser o batman",
+            "description": "Diga repetidas vezes que você é o batman",
+            "user": {{userId}},
+            "category": {{userCategory}},
+            "date": "Thu May 17 2018 00:54:47 GMT-0300 (BRT)"
+        }
+        ```
+ -  Get an article by its `id`:
+    - GET - `http://localhost:5000/article/:id`
+ 
+ -  Get all articles by `user`:
+    - GET - `http://localhost:5000/articles?user={{userId}}`
+
+ -  Get all articles by `category`:
+    - GET - `http://localhost:5000/articles?category={{categoryId}}`
