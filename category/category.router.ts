@@ -33,7 +33,7 @@ class CategoryRouter extends ModelRouter<Category> {
         });
     };
 
-    findByAllStars = (req, resp, next) => {
+    findRockstars = (req, resp, next) => {
         this.model.find()
             .populate({
                 path:     'users',
@@ -68,20 +68,40 @@ class CategoryRouter extends ModelRouter<Category> {
     };
 
     findAll = (req, resp, next) => {
-        this.model.find()
-            .populate({
-                path:     'users',
-                populate: { path:  'user',
-                    model: User }
-            })
-            .populate('articles')
-            .then(this.renderAll(resp,next))
+
+        let page = parseInt(req.query._page || 1);
+        page = page > 0 ? page : 1;
+
+        if(req.query._count)
+            this.pageSize = parseInt(req.query._count, 10);
+
+        const skip = (page - 1) * this.pageSize;
+        
+        this.model
+            .count({})
+            .exec()
+            .then((count) =>
+                this.model
+                    .find()
+                    .populate({
+                        path:     'users',
+                        populate: { path:  'user',
+                            model: User }
+                    })
+                    .populate('articles')
+                    .skip(skip)
+                    .limit(this.pageSize)
+                    .populate('category')
+                    .then(this.renderAll(resp, next,
+                        {
+                            page, count, pageSize: this.pageSize, url: req.url
+                        })))
             .catch(next)
     };
 
     applyRoutes(application: restify.Server){
         application.get(`${this.basePath}`, this.findAll);
-        application.get(`${this.basePath}/rockstars`, this.findByAllStars);
+        application.get(`${this.basePath}/rockstars`, this.findRockstars);
         application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
         application.post(`${this.basePath}`, this.save);
     }
