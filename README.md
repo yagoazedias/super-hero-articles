@@ -48,6 +48,9 @@ git clone https://github.com/yagoazedias/super-hero-articles && cd super-hero-ar
 ### Category
  - Category is a required property for both of `user` and `article` documents. So it must to be the first document to be created.
  
+## Collections
+- [Insomnia](https://mega.nz/#!Eh50wZqK!cnntUpIvBYaK8jWdViS-R5dZLfUkAITti6myvdkaTJY)
+- [Postman](https://mega.nz/#!xlpEEZCI!kD0UWvY7lsrQ_ZLLPK3MXbvLJwoJa9gadMFmI1_897E)
  
 ## Endpoints:
 
