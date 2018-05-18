@@ -37,7 +37,7 @@ class UsersRouter extends ModelRouter<User> {
                     const usersFiltered = users.filter((user) => {
                         if(!user.lastPost)
                             return true;
-                        else if (isLastMonth(new Date(), new Date(user.lastPost))) {
+                        else if (isLastMonth(new Date(user.lastPost), new Date())) {
                             return false;
                         } else {
                             return true;
@@ -107,7 +107,7 @@ class UsersRouter extends ModelRouter<User> {
 
     applyRoutes(application: restify.Server) {
         application.get(`${this.basePath}`, this.findAll);
-        application.get(`${this.basePath}/updated`, this.findByLastPost);
+        application.get(`${this.basePath}/irregular`, this.findByLastPost);
         application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
         application.post(`${this.basePath}`, this.save);
     }

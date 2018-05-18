@@ -49,3 +49,24 @@ git clone https://github.com/yagoazedias/super-hero-articles && cd super-hero-ar
  - Category is a required property for both of `user` and `article` documents. So it must to be the first document to be created.
  
  
+## Endpoints:
+
+### User
+ -  Get All users with pagination
+    - GET `http://localhost:5000/users?_page=1&_count=1`
+    
+    
+ -  Create a new user  
+     - POST - `http://localhost:5000/users`
+        ```json
+        {
+            "name": "K-el",
+            "email": "superman@dc.com",
+            "password": "admin123@"
+        }
+        ```
+ -  Get an user by its `id`:
+    - GET - `http://localhost:5000/users/:id`
+ 
+ -  Get all users that have not posted in the last month:
+    - GET - `http://localhost:5000/users/irregular`
