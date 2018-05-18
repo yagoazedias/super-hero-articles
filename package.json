@@ -1,7 +1,7 @@
 {
-  "name": "meat-api",
+  "name": "super-heroes-articles-api",
   "version": "1.0.0",
-  "description": "API de Restaurantes",
+  "description": "API de super herois",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

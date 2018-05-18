@@ -3,7 +3,7 @@ import * as restify from 'restify';
 import { Article } from './articles.model';
 import { Category } from "../category/category.model";
 import { User } from "../users/users.model";
-import { BadRequestError, NotFoundError} from "restify-errors";
+import { BadRequestError, NotFoundError } from "restify-errors";
 
 class ArticlesRouter extends ModelRouter<Article> {
 
@@ -21,7 +21,6 @@ class ArticlesRouter extends ModelRouter<Article> {
         document.category.users = undefined;
     };
 
-
     findById = (req, resp, next) => {
         this.model
             .findOneAndUpdate({'_id': req.params.id}, {$inc: { views: 1} })
@@ -36,7 +35,7 @@ class ArticlesRouter extends ModelRouter<Article> {
                     resp.send(article);
 
                 } catch (e) {
-                    throw new NotFoundError(`No article found for: ${req.params.id} ID`)
+                    throw new NotFoundError(`No article found for: ${req.params.id} ID`);
                 }
             })
             .catch(next)
@@ -65,14 +64,14 @@ class ArticlesRouter extends ModelRouter<Article> {
 
         if(req.query.category) {
             Article.
-            find({})
-                .then((articles) => {
-                    const articlesFiltered = articles.filter((article) =>
-                        article.category.toString() === req.query.category
-                    );
+                find({})
+                    .then((articles) => {
+                        const articlesFiltered = articles.filter((article) =>
+                            article.category.toString() === req.query.category
+                        );
 
-                    resp.json(articlesFiltered);
-                }).catch(next)
+                        resp.json(articlesFiltered);
+                    }).catch(next)
         } else {
             next();
         }
@@ -150,11 +149,7 @@ class ArticlesRouter extends ModelRouter<Article> {
         application.get('/articles', [this.findByUser, this.findByCategory, this.findAll]);
         application.get('/articles/:id', [this.validateId, this.findById]);
         application.post('/articles', this.save);
-        application.put('/articles/:id', [this.validateId,this.replace]);
-        application.patch('/articles/:id', [this.validateId,this.update]);
-        application.del('/articles/:id', [this.validateId,this.delete]);
     }
-
 }
 
 export const articlesRouter = new ArticlesRouter();

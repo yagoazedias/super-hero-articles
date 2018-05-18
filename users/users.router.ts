@@ -37,11 +37,7 @@ class UsersRouter extends ModelRouter<User> {
                     const usersFiltered = users.filter((user) => {
                         if(!user.lastPost)
                             return true;
-                        else if (isLastMonth(new Date(user.lastPost), new Date())) {
-                            return false;
-                        } else {
-                            return true;
-                        }
+                        else return !isLastMonth(new Date(user.lastPost), new Date());
                     });
 
                     resp.send(usersFiltered);

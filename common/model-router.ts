@@ -10,7 +10,7 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
 
     constructor(protected model: mongoose.Model<D>){
         super();
-        this.basePath = `/${model.collection.name}`
+        this.basePath = `/${model.collection.name}`;
     }
 
     envelope(document: any): any {
@@ -64,41 +64,9 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
     };
 
     save = (req, resp, next) => {
-        let document = new this.model(req.body)
+        let document = new this.model(req.body);
         document.save()
             .then(this.render(resp, next))
             .catch(next)
     };
-
-    replace = (req, resp, next) => {
-        const options = {runValidators: true, overwrite: true}
-        this.model.update({_id: req.params.id}, req.body, options)
-            .exec().then(result=>{
-            if(result.n){
-                return this.model.findById(req.params.id)
-            } else{
-                throw new NotFoundError('Documento não encontrado')
-            }
-        }).then(this.render(resp, next))
-            .catch(next)
-    };
-
-    update = (req, resp, next)=>{
-        const options = {runValidators: true, new : true}
-        this.model.findByIdAndUpdate(req.params.id, req.body, options)
-            .then(this.render(resp, next))
-            .catch(next)
-    };
-
-    delete = (req, resp, next)=>{
-        this.model.remove({_id:req.params.id}).exec().then((cmdResult: any)=>{
-            if(cmdResult.result.n){
-                resp.send(204)
-            }else{
-                throw new NotFoundError('Documento não encontrado')
-            }
-            return next()
-        }).catch(next)
-    }
-
 }

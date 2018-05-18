@@ -1,8 +1,7 @@
-import { ModelRouter } from '../common/model-router'
-import * as restify from 'restify'
-import { NotFoundError } from 'restify-errors'
-import { Category } from './category.model'
-import {User} from "../users/users.model";
+import { ModelRouter } from '../common/model-router';
+import * as restify from 'restify';
+import { Category } from './category.model';
+import { User } from "../users/users.model";
 
 class CategoryRouter extends ModelRouter<Category> {
     constructor(){
@@ -17,10 +16,9 @@ class CategoryRouter extends ModelRouter<Category> {
             (a.views < b.views) ? 1 : ((b.views < a.views) ? -1 : 0));
     }
 
-    private getFirstTree(arr) {
-        return arr.slice(0, 3)
+    private getFirstThree(arr) {
+        return arr.slice(0, 3);
     }
-
 
     preFormatter =  (document) => {
         document.articles.forEach((actual) => {
@@ -44,7 +42,7 @@ class CategoryRouter extends ModelRouter<Category> {
             .then(categories => {
 
                 const categoriesOrdered = this.sortCategoriesByView(categories);
-                const firstCategories = this.getFirstTree(categoriesOrdered);
+                const firstCategories = this.getFirstThree(categoriesOrdered);
 
                 resp.send(firstCategories);
             })
@@ -105,7 +103,6 @@ class CategoryRouter extends ModelRouter<Category> {
         application.get(`${this.basePath}/:id`, [this.validateId, this.findById]);
         application.post(`${this.basePath}`, this.save);
     }
-
 }
 
 export const categoryRouter = new CategoryRouter();
